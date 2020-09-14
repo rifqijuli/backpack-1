@@ -1,0 +1,246 @@
+# ----------------------------------------------------------------------
+# mod_php5.c                                          
+# ----------------------------------------------------------------------
+<IfModule mod_php5.c>
+	RewriteEngine on
+	RewriteCond %{HTTP:X-Forwarded-Proto} !https
+	#RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [R,L]
+	
+	RewriteCond $1 !^(index\.php|resources|robots\.txt|static) [NC]
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^(.*)$ index.php/$1 [L,QSA]
+	
+	# 900 seconds = 15 minutes
+	php_value upload_max_filesize 500M
+	php_value post_max_size 500M
+	php_value max_execution_time 900
+	php_value max_input_time 900
+	php_value default_socket_timeout 900
+	php_value mysql.connect_timeout 900
+	php_value max_input_vars 9000000000000000000
+
+	# prevent directory listings
+	Options -Indexes
+	
+	# remove server signature
+	ServerSignature Off
+</IfModule>
+
+# ----------------------------------------------------------------------
+# mod_mime.c                                          
+# ----------------------------------------------------------------------
+<IfModule mod_mime.c>
+	# DEFAULTS
+	DefaultLanguage en
+	AddLanguage en-US .html .css .js
+	AddCharset utf-8 .html .css .js .xml .json .rss .atom
+	
+	# JAVASCRIPT
+	AddType application/javascript js jsonp
+	AddType application/json json
+	
+	# FONTS
+	AddType font/opentype otf
+	AddType application/font-woff woff
+	AddType application/x-font-woff woff
+	AddType application/vnd.ms-fontobject eot
+	AddType application/x-font-ttf ttc ttf
+	AddType image/svg+xml svg svgz
+	AddEncoding gzip svgz
+	
+	# AUDIO
+	AddType audio/mp4 m4a f4a f4b
+	AddType audio/ogg oga ogg
+	
+	# VIDEO
+	AddType video/mp4 mp4 m4v f4v f4p
+	AddType video/ogg ogv
+	AddType video/webm webm
+	AddType video/x-flv flv
+	
+	# OTHERS
+	AddType application/octet-stream safariextz
+	AddType application/x-chrome-extension crx
+	AddType application/x-opera-extension oex
+	AddType application/x-web-app-manifest+json webapp
+	AddType application/x-xpinstall xpi
+	AddType application/xml atom rdf rss xml
+	AddType application/vnd.openxmlformats .docx .pptx .xlsx .xltx . xltm .dotx .potx .ppsx
+	AddType text/cache-manifest appcache manifest
+	AddType text/vtt vtt
+	AddType text/x-component htc
+	AddType text/x-vcard vcf
+	AddType image/webp webp
+	AddType image/x-icon ico
+</IfModule>
+
+# ----------------------------------------------------------------------
+# mod_headers.c                                            
+# ----------------------------------------------------------------------
+<IfModule mod_headers.c>
+	# Secure cookies
+	Header edit Set-Cookie ^(__Secure-intra_session.*)$ $1;SameSite=Strict
+	Header edit Set-Cookie ^(__Secure-csrf_cookie_intra.*)$ $1;SameSite=Strict
+	
+	# X-XSS-Protection
+	Header set X-XSS-Protection "1; mode=block"
+	
+	# X-Frame-Options
+	Header always append X-Frame-Options SAMEORIGIN
+	
+	# X-Content-Type nosniff
+	Header set X-Content-Type-Options nosniff
+	
+	# Strict-Transport-Security header
+	Header set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+	
+	# Feature Policy
+	Header always set Feature-Policy: "camera 'none'; microphone 'none'; payment 'none';"
+	
+	# Referrer Policy
+	Header always set Referrer-Policy "same-origin"
+	
+	<FilesMatch "\.(ico|pdf|css|gif|png|jpg|jpeg|woff2)$">
+		Header set Cache-Control "max-age=604800, public"
+	</FilesMatch>
+	<filesMatch "\.(js)$">
+		Header set Cache-Control "private"
+	</filesMatch>
+	<filesMatch "\.(css)$">
+		Header set Cache-Control "private"
+	</filesMatch>
+	<filesMatch "\.(x?html?|php)$">
+		Header set Cache-Control "private, must-revalidate"
+	</filesMatch>
+</IfModule>
+
+# ----------------------------------------------------------------------
+# mod_expires.c                                          
+# ----------------------------------------------------------------------
+<IfModule mod_expires.c> 
+	# expires caching
+	ExpiresActive on
+	ExpiresDefault                                    "access plus 1 month"
+	ExpiresByType text/xml                            "access plus 0 seconds"
+	ExpiresByType text/html                           "access plus 0 seconds"
+	ExpiresByType text/plain                          "access plus 0 seconds"
+	ExpiresByType application/xml                     "access plus 0 seconds"
+	ExpiresByType application/json                    "access plus 0 seconds"
+	ExpiresByType application/rss+xml                 "access plus 1 hour"
+	ExpiresByType application/atom+xml                "access plus 1 hour"
+	ExpiresByType text/x-component                    "access plus 1 hour"
+    ExpiresByType application/manifest+json           "access plus 1 week"
+	ExpiresByType application/x-web-app-manifest+json "access plus 0 seconds"
+	ExpiresByType text/cache-manifest                 "access plus 0 seconds"
+	ExpiresByType text/css                            "access plus 1 month" 
+	ExpiresByType text/javascript                     "access plus 1 month" 
+	ExpiresByType application/javascript              "access plus 1 month" 
+	ExpiresByType application/x-javascript            "access plus 1 month" 
+	ExpiresByType image/gif                           "access plus 1 month"
+	ExpiresByType image/png                           "access plus 1 month"
+	ExpiresByType image/jpe                           "access plus 1 month"
+	ExpiresByType image/jpg                           "access plus 1 month"
+	ExpiresByType image/jpeg                          "access plus 1 month"
+	ExpiresByType image/tiff                          "access plus 1 month"
+	ExpiresByType image/svg+xml                       "access plus 1 month"
+	ExpiresByType image/vnd.microsoft.icon            "access plus 1 month"
+	ExpiresByType image/ico                           "access plus 1 month"
+	ExpiresByType image/icon                          "access plus 1 month"
+	ExpiresByType text/ico                            "access plus 1 month"
+	ExpiresByType image/x-ico                         "access plus 1 month"
+	ExpiresByType image/x-icon                        "access plus 1 month"
+	ExpiresByType application/ico                     "access plus 1 month"
+	ExpiresByType audio/ogg                           "access plus 1 month"
+	ExpiresByType audio/basic                         "access plus 1 month"
+	ExpiresByType audio/mid                           "access plus 1 month"
+	ExpiresByType audio/midi                          "access plus 1 month"
+	ExpiresByType audio/mpeg                          "access plus 1 month"
+	ExpiresByType audio/x-aiff                        "access plus 1 month"
+	ExpiresByType audio/x-mpegurl                     "access plus 1 month"
+	ExpiresByType audio/x-pn-realaudio                "access plus 1 month"
+	ExpiresByType audio/x-wav                         "access plus 1 month"
+	ExpiresByType video/ogg                           "access plus 1 month"
+	ExpiresByType video/mp4                           "access plus 1 month"
+	ExpiresByType video/webm                          "access plus 1 month"
+	ExpiresByType video/x-msvideo                     "access plus 1 month"
+	ExpiresByType video/mpeg                          "access plus 1 month"
+	ExpiresByType video/quicktime                     "access plus 1 month"
+	ExpiresByType video/x-la-asf                      "access plus 1 month"
+	ExpiresByType video/x-ms-asf                      "access plus 1 month"
+	ExpiresByType x-world/x-vrml                      "access plus 1 month"
+	ExpiresByType font/truetype                       "access plus 1 month"
+	ExpiresByType font/opentype                       "access plus 1 month"
+    ExpiresByType font/woff                           "access plus 1 month"
+    ExpiresByType font/eot                            "access plus 1 month"
+	ExpiresByType application/x-font-ttf              "access plus 1 month"
+	ExpiresByType application/font-woff               "access plus 1 month"
+	ExpiresByType application/x-font-woff             "access plus 1 month"
+    ExpiresByType application/font-woff2              "access plus 1 month"
+	ExpiresByType application/vnd.ms-fontobject       "access plus 1 month"
+	ExpiresByType application/pdf                     "access plus 1 month"
+	ExpiresByType image/vnd.wap.wbmp                  "access plus 1 month"
+	ExpiresByType application/vnd.wap.wbxml           "access plus 1 month"
+	ExpiresByType application/smil                    "access plus 1 month"
+</IfModule>
+
+# ----------------------------------------------------------------------
+# mod_deflate.c                                          
+# ----------------------------------------------------------------------
+<IfModule mod_deflate.c>
+	# Compress HTML, CSS, JavaScript, Text, XML and fonts
+	AddOutputFilterByType DEFLATE application/javascript
+	AddOutputFilterByType DEFLATE application/js
+	AddOutputFilterByType DEFLATE application/x-httpd-php
+	AddOutputFilterByType DEFLATE application/x-httpd-fastphp
+	AddOutputFilterByType DEFLATE application/atom+xml 
+	AddOutputFilterByType DEFLATE application/json
+	AddOutputFilterByType DEFLATE application/ld+json 
+	AddOutputFilterByType DEFLATE application/x-web-app-manifest+json 
+	AddOutputFilterByType DEFLATE application/rss+xml
+	AddOutputFilterByType DEFLATE application/vnd.ms-fontobject
+	AddOutputFilterByType DEFLATE application/x-font
+	AddOutputFilterByType DEFLATE application/x-font-opentype
+	AddOutputFilterByType DEFLATE application/x-font-otf
+	AddOutputFilterByType DEFLATE application/x-font-truetype
+	AddOutputFilterByType DEFLATE application/x-font-ttf
+	AddOutputFilterByType DEFLATE application/x-javascript
+	AddOutputFilterByType DEFLATE application/xhtml+xml
+	AddOutputFilterByType DEFLATE application/xml
+	AddOutputFilterByType DEFLATE font/opentype
+	AddOutputFilterByType DEFLATE font/otf
+	AddOutputFilterByType DEFLATE font/ttf
+	AddOutputFilterByType DEFLATE font/woff2
+	AddOutputFilterByType DEFLATE image/svg+xml
+	AddOutputFilterByType DEFLATE image/x-icon
+	AddOutputFilterByType DEFLATE text/css
+	AddOutputFilterByType DEFLATE text/html
+	AddOutputFilterByType DEFLATE text/javascript
+	AddOutputFilterByType DEFLATE application/x-javascript
+	AddOutputFilterByType DEFLATE text/plain
+	AddOutputFilterByType DEFLATE text/xml
+	AddOutputFilterByType DEFLATE text/vtt
+	AddOutputFilterByType DEFLATE text/x-component
+	
+	# Exception: Images
+	SetEnvIfNoCase REQUEST_URI \.(?:gif|jpg|jpeg|png)$ no-gzip dont-vary
+	
+	# Remove browser bugs (only needed for really old browsers)
+	BrowserMatch ^Mozilla/4 gzip-only-text/html
+	BrowserMatch ^Mozilla/4\.0[678] no-gzip
+	BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+	
+	# Make sure proxies don't deliver the wrong content
+	Header append Vary User-Agent env=!dont-vary
+</IfModule>
+
+# ----------------------------------------------------------------------
+# mod_expires.c                                          
+# ----------------------------------------------------------------------
+<IfModule mod_expires.c> 
+	# If your server don't support ETags deactivate with "None" (and remove header)
+	<IfModule mod_headers.c> 
+		Header unset ETag 
+	</IfModule> 
+	FileETag None 
+</IfModule>
