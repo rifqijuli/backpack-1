@@ -7,10 +7,28 @@ class Auth extends CI_Controller {
 
 	public function login(){
 		$setting = array(
-			'title' 			=> 'My Bookings'
+			'title' => 'My Bookings'
 		);
 
 		$this->load->view('login');
+		// $this->display_page('mybookings', $setting);
+	}
+	
+	public function register(){
+		$setting = array(
+			'title' => 'My Bookings'
+		);
+
+		$this->load->view('register');
+		// $this->display_page('mybookings', $setting);
+	}
+	
+	public function actRegister(){
+		$setting = array(
+			'title' => 'My Bookings'
+		);
+
+		$this->load->view('function/actRegister');
 		// $this->display_page('mybookings', $setting);
 	}
 
