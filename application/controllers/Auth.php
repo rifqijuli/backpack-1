@@ -28,7 +28,7 @@ class Auth extends CI_Controller {
 			'title' => 'My Bookings'
 		);
 
-		$this->load->view('function/actRegister');
+		$this->load->view('../function/actRegister');
 		// $this->display_page('mybookings', $setting);
 	}
 
