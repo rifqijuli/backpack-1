@@ -11,7 +11,6 @@ class Auth extends CI_Controller {
 		);
 
 		$this->load->view('login');
-		// $this->display_page('mybookings', $setting);
 	}
 	
 	public function register(){
@@ -20,7 +19,22 @@ class Auth extends CI_Controller {
 		);
 
 		$this->load->view('register');
-		// $this->display_page('mybookings', $setting);
+	}
+	
+	public function forgotPassword(){
+		$setting = array(
+			'title' => 'My Bookings'
+		);
+
+		$this->load->view('forgotPassword');
+	}
+	
+	public function resetPassword(){
+		$setting = array(
+			'title' => 'My Bookings'
+		);
+
+		$this->load->view('resetPassword');
 	}
 	
 	public function actRegister(){
@@ -29,7 +43,22 @@ class Auth extends CI_Controller {
 		);
 
 		$this->load->view('../function/actRegister');
-		// $this->display_page('mybookings', $setting);
+	}
+	
+	public function actForgotPassword(){
+		$setting = array(
+			'title' => 'My Bookings'
+		);
+
+		$this->load->view('../function/actForgotPassword');
+	}
+	
+	public function actResetPassword(){
+		$setting = array(
+			'title' => 'My Bookings'
+		);
+
+		$this->load->view('../function/actResetPassword');
 	}
 
 	//display

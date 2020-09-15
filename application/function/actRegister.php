@@ -4,12 +4,12 @@
     $email    = @$_POST['inputEmail'];
     $password  = hash("sha256",@$_POST['inputPassword']);
 	$retypepassword  = hash("sha256",@$_POST['inputRetypePassword']);
-	$dateRegister = date("Ymd",time()).time();
+	
+	date_default_timezone_set("Asia/Bangkok");
+	$dateRegister = date("Ymd",time()).date("H:i:s");
 	
 	//echo ($email."\n".$password."\n".$retypepassword."\n".$agreement);
 	
-	//$fullname = preg_replace("/[^a-zA-Z0-9\s]/", "", $fullname);
-	//$fullname = preg_replace('/-+/', '-', $fullname);
 	if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 		header('location:register?status=fail');
 		exit;

@@ -38,8 +38,8 @@
                 <div class="p-5">
 				  <div class="text-center">
 					<?php 
-						if(@$_GET['status'] == 'failed'){ ?>
-							<h1 class="h4 text-gray-900 mb-4">ERROR!</h1>
+						if(@$_GET['status'] == 'forgotPassword'){ ?>
+							<h1 class="h4 text-gray-900 mb-4">Password Change Request Success!</h1>
 					<?php } 
 						else if(@$_GET['status'] == 'success'){ ?>
 							<h1 class="h4 text-gray-900 mb-4">Register Success!</h1>
@@ -67,7 +67,7 @@
                   </form>
                   <hr>
                   <div class="text-center">
-                    <a class="small" href="forgot-password.html">Forgot Password?</a>
+                    <a class="small" href="forgotPassword">Forgot Password?</a>
                   </div>
                   <div class="text-center">
                     <a class="small" href="register">Create an Account!</a>
