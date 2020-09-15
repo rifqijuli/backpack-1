@@ -45,7 +45,7 @@
 							<h1 class="h4 text-gray-900 mb-4">Please provide a proper E-mail Address.</h1>
 					<?php } 
 						else if(@$_GET['status'] == 'unknown'){ ?>
-							<h1 class="h4 text-gray-900 mb-4">URL not found</h1>
+							<h1 class="h4 text-gray-900 mb-4">Invalid, please repeat the process.</h1>
 					<?php }
 						else { ?>                 
 							<h1 class="h4 text-gray-900 mb-4">Forgot your Password?</h1>

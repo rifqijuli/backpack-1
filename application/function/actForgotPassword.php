@@ -8,7 +8,7 @@
 	
 	$hash = hash("sha256",$dateRegister);
 	
-	$link = 'http://localhost/backpack/auth/actResetPassword?key=$hash';
+	$link = 'http://localhost/backpack/auth/resetPassword?key='.($hash);
 	//echo ($email.$hash);
 	
 	//$fullname = preg_replace("/[^a-zA-Z0-9\s]/", "", $fullname);
